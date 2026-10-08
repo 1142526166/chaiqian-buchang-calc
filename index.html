@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拆迁补偿精算测算工具</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-size='32' text-anchor='middle' fill='white' font-weight='bold'%3E%E6%8B%86%3C/text%3E%3C/svg%3E">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #f1f5f9;
+            min-height: 100vh;
+            padding-bottom: 40px;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .header {
+            text-align: center;
+            padding: 32px 24px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .header .icon {
+            width: 40px;
+            height: 40px;
+            background: #dbeafe;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-size: 20px;
+        }
+        .disclaimer {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: #fef2f2;
+            border-radius: 8px;
+            color: #dc2626;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0f172a;
+        }
+        .section-title .dot {
+            width: 4px;
+            height: 18px;
+            border-radius: 2px;
+        }
+        .dot-blue { background: #2563eb; }
+        .dot-amber { background: #d97706; }
+        .dot-green { background: #059669; }
+        .dot-purple { background: #7c3aed; }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: #fff;
+            color: #1e293b;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        input:disabled, select:disabled {
+            background: #f8fafc;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+        input.error {
+            border-color: #dc2626;
+            background: #fef2f2;
+        }
+        .error-msg {
+            font-size: 12px;
+            color: #dc2626;
+            margin-top: 4px;
+            display: none;
+        }
+        .error-msg.show {
+            display: block;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #2563eb;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+        .btn-success {
+            background: #059669;
+            color: #fff;
+            width: 100%;
+        }
+        .btn-success:hover {
+            background: #047857;
+        }
+        .result-box {
+            display: none;
+        }
+        .result-box.show {
+            display: block;
+        }
+        .result-total {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .result-total .label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+        .result-total .amount {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .result-list {
+            margin-bottom: 20px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-item .name {
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .result-item .name .swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        .result-item .value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        #chart {
+            width: 100%;
+            height: 280px;
+            margin-bottom: 16px;
+        }
+        .section-hidden {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 480px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .card {
+                padding: 18px;
+            }
+            input, select {
+                font-size: 16px;
+            }
+        }
+        .hint {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+        .pct-warning {
+            color: #d97706;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+        .pct-warning.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="card header">
+            <h1>
+                <div class="icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                        <line x1="8" y1="6" x2="16" y2="6"></line>
+                        <line x1="16" y1="14" x2="16" y2="18"></line>
+                        <line x1="12" y1="14" x2="12" y2="18"></line>
+                        <line x1="8" y1="14" x2="8" y2="18"></line>
+                    </svg>
+                </div>
+                拆迁补偿精算测算工具
+            </h1>
+            <div class="disclaimer">
+                本工具为演示测算，结果仅供参考，不具备法律效力，最终补偿标准以当地征收公告及评估报告为准
+            </div>
+        </div>
+
+        <!-- 基础信息 -->
+        <div class="card">
+            <div class="section-title">
+                <div class="dot dot-blue"></div>
+                基础信息
+            </div>
+            <div class="form-group">
+                <label>省份</label>
+                <select id="province">
+                    <option value="jiangsu">江苏省</option>
+                    <option value="zhejiang">浙江省</option>
+                    <option value="shanghai">上海市</option>
+                    <option value="guangdong">广东省</option>
+                    <option value="hubei" selected>湖北省</option>
+                    <option value="shandong">山东省</option>
+                    <option value="sichuan">四川省</option>
+                    <option value="henan">河南省</option>
+                    <option value="beijing">北京市</option>
+                    <option value="custom">自定义地区</option>
+                </select>
+                <div class="hint">选择省份后将自动填入该地区参考参数</div>
+            </div>
+            <div class="form-group">
+                <label>土地性质</label>
+                <select id="landType">
+                    <option value="collective" selected>集体土地（宅基地/耕地）</option>
+                    <option value="state">国有土地上房屋</option>
+                </select>
+                <div class="hint">国有土地征收一般无土地补偿费、安置补助费及青苗补偿</div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>房屋建筑面积 (㎡)</label>
+                    <input type="number" id="houseArea" value="120" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>房屋评估单价 (元/㎡)</label>
+                    <input type="number" id="housePrice" value="4200" min="0">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>装修评估单价 (元/㎡)</label>
+                    <input type="number" id="decorPrice" value="800" min="0">
+                </div>
+                <div class="form-group">
+                    <label>附属物补偿总额 (元)</label>
+                    <input type="number" id="attachPrice" value="15000" min="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- 土地补偿模块 -->
+        <div class="card" id="landSection">
+            <div class="section-title">
+                <div class="dot dot-amber"></div>
+                土地补偿费与安置补助费
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>被征收土地面积（亩）</label>
+                    <input type="number" id="landMu" value="2" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>片区综合地价（元/亩）</label>
+                    <input type="number" id="landTotalPrice" value="45000" min="0">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>土地补偿费占比（%）</label>
+                    <input type="number" id="landRatio" value="40" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label>安置补助费占比（%）</label>
+                    <input type="number" id="resettleRatio" value="60" min="0" max="100">
+                </div>
+            </div>
+            <div class="pct-warning" id="pctWarning">
+                提示：两项占比之和建议为100%，当前合计 {total}%
+            </div>
+        </div>
+
+        <!-- 青苗补偿模块 -->
+        <div class="card" id="cropSection">
+            <div class="section-title">
+                <div class="dot dot-green"></div>
+                青苗补偿
+            </div>
+            <div class="form-group">
+                <label>青苗类型</label>
+                <select id="cropType">
+                    <option value="grain" selected>粮食作物（水稻、小麦、玉米）</option>
+                    <option value="vegetable">蔬菜类</option>
+                    <option value="fruit">果树苗木</option>
+                    <option value="aquatic">水产养殖</option>
+                    <option value="custom">自定义作物</option>
+                </select>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>青苗占地面积（亩）</label>
+                    <input type="number" id="cropMu" value="2" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>青苗补偿单价（元/亩）</label>
+                    <input type="number" id="cropPrice" value="2000" min="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- 搬迁与安置 -->
+        <div class="card">
+            <div class="section-title">
+                <div class="dot dot-purple"></div>
+                搬迁与安置奖励
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>搬迁费（元）</label>
+                    <input type="number" id="moveFee" value="3000" min="0">
+                </div>
+                <div class="form-group">
+                    <label>按期签约奖励（元）</label>
+                    <input type="number" id="bonus" value="50000" min="0">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>临时安置费（元/月）</label>
+                    <input type="number" id="transitFee" value="1200" min="0">
+                </div>
+                <div class="form-group">
+                    <label>预计过渡月数</label>
+                    <input type="number" id="transitMonth" value="18" min="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="calcTotal()">开始精算</button>
+            <button class="btn btn-secondary" onclick="resetForm()">重置参数</button>
+        </div>
+
+        <!-- 计算结果 -->
+        <div class="card result-box" id="resultBox">
+            <div class="section-title">
+                <div class="dot dot-blue"></div>
+                精算结果明细
+            </div>
+
+            <div class="result-total">
+                <div class="label">预估总补偿金额</div>
+                <div class="amount" id="resTotal">¥0.00</div>
+            </div>
+
+            <div id="chart"></div>
+
+            <div class="result-list">
+                <div class="result-item">
+                    <span class="name"><span class="swatch" style="background:#3b82f6"></span>房屋主体补偿</span>
+                    <span class="value" id="resHouse">¥0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="name"><span class="swatch" style="background:#60a5fa"></span>装修补偿</span>
+                    <span class="value" id="resDecor">¥0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="name"><span class="swatch" style="background:#93c5fd"></span>附属物补偿</span>
+                    <span class="value" id="resAttach">¥0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="name"><span class="swatch" style="background:#f59e0b"></span>土地补偿费</span>
+                    <span class="value" id="resLandComp">¥0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="name"><span class="swatch" style="background:#fbbf24"></span>安置补助费</span>
+                    <span class="value" id="resResettle">¥0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="name"><span class="swatch" style="background:#10b981"></span>青苗补偿费</span>
+                    <span class="value" id="resCrop">¥0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="name"><span class="swatch" style="background:#8b5cf6"></span>搬迁费</span>
+                    <span class="value" id="resMove">¥0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="name"><span class="swatch" style="background:#a78bfa"></span>过渡安置费</span>
+                    <span class="value" id="resTransit">¥0.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="name"><span class="swatch" style="background:#ec4899"></span>签约奖励</span>
+                    <span class="value" id="resBonus">¥0.00</span>
+                </div>
+            </div>
+
+            <button class="btn btn-success" onclick="exportReport()">导出测算报告</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== 地区参考数据 =====
+        const PROVINCE_PRESETS = {
+            jiangsu:  { housePrice: 5800, decorPrice: 1000, landTotalPrice: 52000, cropPrice: 2200, moveFee: 3500, transitFee: 1500, bonus: 60000 },
+            zhejiang:  { housePrice: 6500, decorPrice: 1200, landTotalPrice: 65000, cropPrice: 2800, moveFee: 4000, transitFee: 1800, bonus: 80000 },
+            shanghai:  { housePrice: 18000, decorPrice: 2500, landTotalPrice: 95000, cropPrice: 4000, moveFee: 8000, transitFee: 4000, bonus: 200000 },
+            guangdong: { housePrice: 7500, decorPrice: 1200, landTotalPrice: 58000, cropPrice: 2500, moveFee: 3500, transitFee: 1600, bonus: 70000 },
+            hubei:     { housePrice: 4200, decorPrice: 800, landTotalPrice: 45000, cropPrice: 2000, moveFee: 3000, transitFee: 1200, bonus: 50000 },
+            shandong:  { housePrice: 4800, decorPrice: 900, landTotalPrice: 48000, cropPrice: 2100, moveFee: 3000, transitFee: 1300, bonus: 55000 },
+            sichuan:   { housePrice: 4500, decorPrice: 850, landTotalPrice: 42000, cropPrice: 1900, moveFee: 2800, transitFee: 1100, bonus: 48000 },
+            henan:     { housePrice: 3800, decorPrice: 700, landTotalPrice: 38000, cropPrice: 1800, moveFee: 2500, transitFee: 1000, bonus: 40000 },
+            beijing:   { housePrice: 25000, decorPrice: 3000, landTotalPrice: 120000, cropPrice: 5000, moveFee: 10000, transitFee: 5000, bonus: 300000 },
+        };
+
+        // ===== 青苗类型参考单价 =====
+        const CROP_PRESETS = {
+            grain: 2000,
+            vegetable: 4000,
+            fruit: 8000,
+            aquatic: 6000,
+        };
+
+        // ===== 工具函数 =====
+        function $(id) { return document.getElementById(id); }
+        function val(id) { return Number($(id).value) || 0; }
+        function formatMoney(n) {
+            return '¥' + n.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // ===== 初始化图表 =====
+        let chart = null;
+        function initChart() {
+            if (typeof echarts === 'undefined') {
+                // CDN加载失败时隐藏图表容器，降级为纯列表展示
+                const el = $('chart');
+                if (el) el.style.display = 'none';
+                return;
+            }
+            chart = echarts.init($('chart'));
+            window.addEventListener('resize', () => chart && chart.resize());
+        }
+
+        // ===== 省份联动 =====
+        function onProvinceChange() {
+            const key = $('province').value;
+            if (key === 'custom' || !PROVINCE_PRESETS[key]) return;
+            const p = PROVINCE_PRESETS[key];
+            $('housePrice').value = p.housePrice;
+            $('decorPrice').value = p.decorPrice;
+            $('landTotalPrice').value = p.landTotalPrice;
+            $('cropPrice').value = p.cropPrice;
+            $('moveFee').value = p.moveFee;
+            $('transitFee').value = p.transitFee;
+            $('bonus').value = p.bonus;
+            calcTotal();
+        }
+
+        // ===== 土地性质联动 =====
+        function onLandTypeChange() {
+            const isCollective = $('landType').value === 'collective';
+            $('landSection').classList.toggle('section-hidden', !isCollective);
+            $('cropSection').classList.toggle('section-hidden', !isCollective);
+            calcTotal();
+        }
+
+        // ===== 青苗类型联动 =====
+        function onCropTypeChange() {
+            const key = $('cropType').value;
+            if (key === 'custom' || !CROP_PRESETS[key]) return;
+            $('cropPrice').value = CROP_PRESETS[key];
+            calcTotal();
+        }
+
+        // ===== 比例校验 =====
+        function checkRatios() {
+            const lr = val('landRatio');
+            const rr = val('resettleRatio');
+            const sum = lr + rr;
+            const warn = $('pctWarning');
+            if (Math.abs(sum - 100) > 0.1) {
+                warn.textContent = `提示：两项占比之和建议为100%，当前合计 ${sum}%`;
+                warn.classList.add('show');
+            } else {
+                warn.classList.remove('show');
+            }
+        }
+
+        // ===== 核心计算 =====
+        function calcTotal() {
+            const isCollective = $('landType').value === 'collective';
+
+            // 房屋相关
+            const houseTotal = val('houseArea') * val('housePrice');
+            const decorTotal = val('houseArea') * val('decorPrice');
+            const attachTotal = val('attachPrice');
+
+            // 土地与安置（仅集体土地）
+            let landCompTotal = 0, resettleTotal = 0, cropTotal = 0;
+            if (isCollective) {
+                const landMu = val('landMu');
+                const landTotalPrice = val('landTotalPrice');
+                const landRatio = val('landRatio') / 100;
+                const resettleRatio = val('resettleRatio') / 100;
+                landCompTotal = landMu * landTotalPrice * landRatio;
+                resettleTotal = landMu * landTotalPrice * resettleRatio;
+                cropTotal = val('cropMu') * val('cropPrice');
+                checkRatios();
+            }
+
+            // 搬迁与奖励
+            const moveTotal = val('moveFee');
+            const transitTotal = val('transitFee') * val('transitMonth');
+            const bonusTotal = val('bonus');
+
+            // 合计
+            const sum = houseTotal + decorTotal + attachTotal + landCompTotal + resettleTotal + cropTotal + moveTotal + transitTotal + bonusTotal;
+
+            // 回填DOM
+            $('resHouse').textContent = formatMoney(houseTotal);
+            $('resDecor').textContent = formatMoney(decorTotal);
+            $('resAttach').textContent = formatMoney(attachTotal);
+            $('resLandComp').textContent = formatMoney(landCompTotal);
+            $('resResettle').textContent = formatMoney(resettleTotal);
+            $('resCrop').textContent = formatMoney(cropTotal);
+            $('resMove').textContent = formatMoney(moveTotal);
+            $('resTransit').textContent = formatMoney(transitTotal);
+            $('resBonus').textContent = formatMoney(bonusTotal);
+            $('resTotal').textContent = formatMoney(sum);
+            $('resultBox').classList.add('show');
+
+            // 更新饼图
+            updateChart([
+                { name: '房屋主体', value: houseTotal, color: '#3b82f6' },
+                { name: '装修补偿', value: decorTotal, color: '#60a5fa' },
+                { name: '附属物', value: attachTotal, color: '#93c5fd' },
+                { name: '土地补偿', value: landCompTotal, color: '#f59e0b' },
+                { name: '安置补助', value: resettleTotal, color: '#fbbf24' },
+                { name: '青苗补偿', value: cropTotal, color: '#10b981' },
+                { name: '搬迁费', value: moveTotal, color: '#8b5cf6' },
+                { name: '过渡费', value: transitTotal, color: '#a78bfa' },
+                { name: '签约奖励', value: bonusTotal, color: '#ec4899' },
+            ]);
+        }
+
+        // ===== 饼图渲染 =====
+        function updateChart(data) {
+            if (!chart) return;
+            const valid = data.filter(d => d.value > 0);
+            if (!valid.length || !chart) return;
+            chart.setOption({
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c}元 ({d}%)'
+                },
+                legend: {
+                    bottom: 0,
+                    itemWidth: 10,
+                    itemHeight: 10,
+                    textStyle: { fontSize: 11, color: '#64748b' }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '65%'],
+                    center: ['50%', '42%'],
+                    avoidLabelOverlap: true,
+                    label: { show: false },
+                    itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 },
+                    data: valid.map(d => ({
+                        name: d.name,
+                        value: Math.round(d.value),
+                        itemStyle: { color: d.color }
+                    }))
+                }]
+            });
+        }
+
+        // ===== 重置 =====
+        function resetForm() {
+            $('houseArea').value = 120;
+            $('decorPrice').value = 800;
+            $('attachPrice').value = 15000;
+            $('landMu').value = 2;
+            $('landTotalPrice').value = 45000;
+            $('landRatio').value = 40;
+            $('resettleRatio').value = 60;
+            $('cropMu').value = 2;
+            $('cropPrice').value = 2000;
+            $('moveFee').value = 3000;
+            $('transitFee').value = 1200;
+            $('transitMonth').value = 18;
+            $('bonus').value = 50000;
+            $('province').value = 'hubei';
+            $('landType').value = 'collective';
+            $('cropType').value = 'grain';
+            onLandTypeChange();
+            onProvinceChange();
+            calcTotal();
+        }
+
+        // ===== 导出报告 =====
+        function exportReport() {
+            const opt = (id) => $(id).options[$(id).selectedIndex].text;
+            const content = [
+                '========== 拆迁补偿精算报告 ==========',
+                `生成时间：${new Date().toLocaleString('zh-CN')}`,
+                '',
+                '【基础信息】',
+                `省份：${opt('province')}`,
+                `土地性质：${opt('landType')}`,
+                `房屋建筑面积：${$('houseArea').value} ㎡`,
+                `房屋评估单价：${$('housePrice').value} 元/㎡`,
+                `装修评估单价：${$('decorPrice').value} 元/㎡`,
+                `附属物补偿：${$('attachPrice').value} 元`,
+                '',
+                $('landType').value === 'collective' ? [
+                    '【土地与青苗补偿】',
+                    `征地面积：${$('landMu').value} 亩`,
+                    `片区综合地价：${$('landTotalPrice').value} 元/亩`,
+                    `土地补偿占比：${$('landRatio').value}%`,
+                    `安置补助占比：${$('resettleRatio').value}%`,
+                    `青苗类型：${opt('cropType')}`,
+                    `青苗面积：${$('cropMu').value} 亩`,
+                    `青苗单价：${$('cropPrice').value} 元/亩`,
+                    ''
+                ].join('\n') : '',
+                '【搬迁与奖励】',
+                `搬迁费：${$('moveFee').value} 元`,
+                `临时安置费：${$('transitFee').value} 元/月 × ${$('transitMonth').value} 月`,
+                `签约奖励：${$('bonus').value} 元`,
+                '',
+                '========== 补偿明细 ==========',
+                `房屋主体补偿：${$('resHouse').textContent}`,
+                `装修补偿：${$('resDecor').textContent}`,
+                `附属物补偿：${$('resAttach').textContent}`,
+                `土地补偿费：${$('resLandComp').textContent}`,
+                `安置补助费：${$('resResettle').textContent}`,
+                `青苗补偿费：${$('resCrop').textContent}`,
+                `搬迁费：${$('resMove').textContent}`,
+                `过渡安置费：${$('resTransit').textContent}`,
+                `签约奖励：${$('resBonus').textContent}`,
+                '',
+                `★ 预估总补偿金额：${$('resTotal').textContent}`,
+                '',
+                '⚠ 免责声明：本报告仅为演示测算，不具备法律效力，最终补偿以当地征收公告及评估报告为准。',
+            ].filter(Boolean).join('\n');
+
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `拆迁补偿测算报告_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ===== 事件绑定 =====
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            $('province').addEventListener('change', onProvinceChange);
+            $('landType').addEventListener('change', onLandTypeChange);
+            $('cropType').addEventListener('change', onCropTypeChange);
+
+            // 所有输入框变化时实时计算
+            document.querySelectorAll('input[type="number"]').forEach(inp => {
+                inp.addEventListener('input', calcTotal);
+            });
+
+            // 初始状态
+            onLandTypeChange();
+            calcTotal();
+        });
+    </script>
+</body>
+</html>
