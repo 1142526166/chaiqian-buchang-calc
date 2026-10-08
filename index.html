@@ -7,11 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Ctext x='32' y='44' font-size='32' text-anchor='middle' fill='white' font-weight='bold'%3E%E6%8B%86%3C/text%3E%3C/svg%3E">
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
             background: #f1f5f9;
@@ -19,11 +15,7 @@
             padding-bottom: 40px;
             color: #1e293b;
         }
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 20px 16px;
-        }
+        .container { max-width: 720px; margin: 0 auto; padding: 20px 16px; }
         .card {
             background: #fff;
             border-radius: 12px;
@@ -31,231 +23,99 @@
             margin-bottom: 16px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.06);
         }
-        .header {
-            text-align: center;
-            padding: 32px 24px;
-        }
+        .header { text-align: center; padding: 32px 24px; }
         .header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1e40af;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            font-size: 24px; font-weight: 700; color: #1e40af;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .header .icon {
-            width: 40px;
-            height: 40px;
-            background: #dbeafe;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2563eb;
-            font-size: 20px;
+            width: 40px; height: 40px; background: #dbeafe;
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            color: #2563eb; font-size: 20px;
         }
         .disclaimer {
-            margin-top: 12px;
-            padding: 10px 14px;
-            background: #fef2f2;
-            border-radius: 8px;
-            color: #dc2626;
-            font-size: 13px;
-            line-height: 1.5;
+            margin-top: 12px; padding: 10px 14px;
+            background: #fef2f2; border-radius: 8px;
+            color: #dc2626; font-size: 13px; line-height: 1.5;
         }
         .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #0f172a;
+            font-size: 16px; font-weight: 600; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px; color: #0f172a;
         }
-        .section-title .dot {
-            width: 4px;
-            height: 18px;
-            border-radius: 2px;
-        }
+        .section-title .dot { width: 4px; height: 18px; border-radius: 2px; }
         .dot-blue { background: #2563eb; }
         .dot-amber { background: #d97706; }
         .dot-green { background: #059669; }
         .dot-purple { background: #7c3aed; }
-        .form-group {
-            margin-bottom: 14px;
-        }
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
+        .dot-red { background: #dc2626; }
+        .form-group { margin-bottom: 14px; }
+        .form-group:last-child { margin-bottom: 0; }
         label {
-            display: block;
-            font-size: 13px;
-            color: #475569;
-            margin-bottom: 6px;
-            font-weight: 500;
+            display: block; font-size: 13px; color: #475569;
+            margin-bottom: 6px; font-weight: 500;
         }
         input, select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.2s;
-            background: #fff;
-            color: #1e293b;
+            width: 100%; padding: 10px 12px;
+            border: 1px solid #e2e8f0; border-radius: 8px;
+            font-size: 14px; transition: all 0.2s;
+            background: #fff; color: #1e293b;
         }
         input:focus, select:focus {
-            outline: none;
-            border-color: #2563eb;
+            outline: none; border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
-        input:disabled, select:disabled {
-            background: #f8fafc;
-            color: #94a3b8;
-            cursor: not-allowed;
-        }
-        input.error {
-            border-color: #dc2626;
-            background: #fef2f2;
-        }
-        .error-msg {
-            font-size: 12px;
-            color: #dc2626;
-            margin-top: 4px;
-            display: none;
-        }
-        .error-msg.show {
-            display: block;
-        }
-        .btn-row {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
+        .btn-row { display: flex; gap: 12px; margin-bottom: 16px; }
         .btn {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+            flex: 1; padding: 14px; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s;
         }
-        .btn-primary {
-            background: #2563eb;
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #475569;
-        }
-        .btn-secondary:hover {
-            background: #cbd5e1;
-        }
-        .btn-success {
-            background: #059669;
-            color: #fff;
-            width: 100%;
-        }
-        .btn-success:hover {
-            background: #047857;
-        }
-        .result-box {
-            display: none;
-        }
-        .result-box.show {
-            display: block;
-        }
+        .btn-primary { background: #2563eb; color: #fff; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-secondary { background: #e2e8f0; color: #475569; }
+        .btn-secondary:hover { background: #cbd5e1; }
+        .btn-success { background: #059669; color: #fff; width: 100%; }
+        .btn-success:hover { background: #047857; }
+        .result-box { display: none; }
+        .result-box.show { display: block; }
         .result-total {
             background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-            color: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 20px;
+            color: #fff; padding: 20px; border-radius: 12px;
+            text-align: center; margin-bottom: 20px;
         }
-        .result-total .label {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 6px;
-        }
-        .result-total .amount {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-        .result-list {
-            margin-bottom: 20px;
-        }
+        .result-total .label { font-size: 14px; opacity: 0.9; margin-bottom: 6px; }
+        .result-total .amount { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
+        .result-list { margin-bottom: 20px; }
         .result-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px;
+        }
+        .result-item:last-child { border-bottom: none; }
+        .result-item .name { color: #64748b; display: flex; align-items: center; gap: 8px; }
+        .result-item .name .swatch { width: 10px; height: 10px; border-radius: 2px; }
+        .result-item .value { font-weight: 600; color: #1e293b; }
+        #chart, #historyChart { width: 100%; height: 280px; margin-bottom: 16px; }
+        .section-hidden { opacity: 0.4; pointer-events: none; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .hint { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+        .history-table {
+            width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px;
+        }
+        .history-table th, .history-table td {
+            padding: 10px 8px; text-align: left;
             border-bottom: 1px solid #f1f5f9;
-            font-size: 14px;
         }
-        .result-item:last-child {
-            border-bottom: none;
+        .history-table th {
+            background: #f8fafc; font-weight: 600; color: #475569;
+            font-size: 12px; text-transform: uppercase;
         }
-        .result-item .name {
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .result-item .name .swatch {
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-        }
-        .result-item .value {
-            font-weight: 600;
-            color: #1e293b;
-        }
-        #chart {
-            width: 100%;
-            height: 280px;
-            margin-bottom: 16px;
-        }
-        .section-hidden {
-            opacity: 0.4;
-            pointer-events: none;
-        }
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+        .history-table tr:hover { background: #f8fafc; }
+        .up { color: #dc2626; }
+        .down { color: #059669; }
         @media (max-width: 480px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-            .card {
-                padding: 18px;
-            }
-            input, select {
-                font-size: 16px;
-            }
-        }
-        .hint {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-top: 4px;
-        }
-        .pct-warning {
-            color: #d97706;
-            font-size: 12px;
-            margin-top: 4px;
-            display: none;
-        }
-        .pct-warning.show {
-            display: block;
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .card { padding: 18px; }
+            input, select { font-size: 16px; }
         }
     </style>
 </head>
@@ -268,9 +128,6 @@
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
                         <line x1="8" y1="6" x2="16" y2="6"></line>
-                        <line x1="16" y1="14" x2="16" y2="18"></line>
-                        <line x1="12" y1="14" x2="12" y2="18"></line>
-                        <line x1="8" y1="14" x2="8" y2="18"></line>
                     </svg>
                 </div>
                 拆迁补偿精算测算工具
@@ -280,31 +137,58 @@
             </div>
         </div>
 
+        <!-- 五级地址选择 -->
+        <div class="card">
+            <div class="section-title">
+                <div class="dot dot-blue"></div>
+                被征收地址（精确到村）
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>省份</label>
+                    <select id="province" onchange="onProvinceChange()">
+                        <option value="jiangsu">江苏省</option>
+                        <option value="zhejiang">浙江省</option>
+                        <option value="shanghai">上海市</option>
+                        <option value="guangdong">广东省</option>
+                        <option value="hubei" selected>湖北省</option>
+                        <option value="shandong">山东省</option>
+                        <option value="sichuan">四川省</option>
+                        <option value="henan">河南省</option>
+                        <option value="beijing">北京市</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>城市</label>
+                    <select id="city" onchange="onCityChange()"></select>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>区/县</label>
+                    <select id="district"></select>
+                </div>
+                <div class="form-group">
+                    <label>镇/乡</label>
+                    <input type="text" id="town" placeholder="请输入镇/乡名称" value="城关镇">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>行政村</label>
+                <input type="text" id="village" placeholder="请输入具体村名，如：XX村" value="幸福村">
+            </div>
+            <div class="hint">填写完整地址后，系统将自动匹配该地区近10年周边村拆迁补偿参考数据</div>
+        </div>
+
         <!-- 基础信息 -->
         <div class="card">
             <div class="section-title">
                 <div class="dot dot-blue"></div>
-                基础信息
-            </div>
-            <div class="form-group">
-                <label>省份</label>
-                <select id="province">
-                    <option value="jiangsu">江苏省</option>
-                    <option value="zhejiang">浙江省</option>
-                    <option value="shanghai">上海市</option>
-                    <option value="guangdong">广东省</option>
-                    <option value="hubei" selected>湖北省</option>
-                    <option value="shandong">山东省</option>
-                    <option value="sichuan">四川省</option>
-                    <option value="henan">河南省</option>
-                    <option value="beijing">北京市</option>
-                    <option value="custom">自定义地区</option>
-                </select>
-                <div class="hint">选择省份后将自动填入该地区参考参数</div>
+                房屋与土地信息
             </div>
             <div class="form-group">
                 <label>土地性质</label>
-                <select id="landType">
+                <select id="landType" onchange="onLandTypeChange()">
                     <option value="collective" selected>集体土地（宅基地/耕地）</option>
                     <option value="state">国有土地上房屋</option>
                 </select>
@@ -358,9 +242,6 @@
                     <input type="number" id="resettleRatio" value="60" min="0" max="100">
                 </div>
             </div>
-            <div class="pct-warning" id="pctWarning">
-                提示：两项占比之和建议为100%，当前合计 {total}%
-            </div>
         </div>
 
         <!-- 青苗补偿模块 -->
@@ -371,12 +252,11 @@
             </div>
             <div class="form-group">
                 <label>青苗类型</label>
-                <select id="cropType">
+                <select id="cropType" onchange="onCropTypeChange()">
                     <option value="grain" selected>粮食作物（水稻、小麦、玉米）</option>
                     <option value="vegetable">蔬菜类</option>
                     <option value="fruit">果树苗木</option>
                     <option value="aquatic">水产养殖</option>
-                    <option value="custom">自定义作物</option>
                 </select>
             </div>
             <div class="grid-2">
@@ -480,28 +360,114 @@
 
             <button class="btn btn-success" onclick="exportReport()">导出测算报告</button>
         </div>
+
+        <!-- 历史对比模块 -->
+        <div class="card" id="historySection">
+            <div class="section-title">
+                <div class="dot dot-red"></div>
+                近10年周边村拆迁补偿对比
+            </div>
+            <div class="hint" style="margin-bottom:12px">
+                数据来源：公开征地公告汇总，仅供参考
+            </div>
+            <div id="historyChart"></div>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>年份</th>
+                        <th>房屋单价(元/㎡)</th>
+                        <th>片区地价(元/亩)</th>
+                        <th>同比涨幅</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        // ===== 地区参考数据 =====
-        const PROVINCE_PRESETS = {
-            jiangsu:  { housePrice: 5800, decorPrice: 1000, landTotalPrice: 52000, cropPrice: 2200, moveFee: 3500, transitFee: 1500, bonus: 60000 },
-            zhejiang:  { housePrice: 6500, decorPrice: 1200, landTotalPrice: 65000, cropPrice: 2800, moveFee: 4000, transitFee: 1800, bonus: 80000 },
-            shanghai:  { housePrice: 18000, decorPrice: 2500, landTotalPrice: 95000, cropPrice: 4000, moveFee: 8000, transitFee: 4000, bonus: 200000 },
-            guangdong: { housePrice: 7500, decorPrice: 1200, landTotalPrice: 58000, cropPrice: 2500, moveFee: 3500, transitFee: 1600, bonus: 70000 },
-            hubei:     { housePrice: 4200, decorPrice: 800, landTotalPrice: 45000, cropPrice: 2000, moveFee: 3000, transitFee: 1200, bonus: 50000 },
-            shandong:  { housePrice: 4800, decorPrice: 900, landTotalPrice: 48000, cropPrice: 2100, moveFee: 3000, transitFee: 1300, bonus: 55000 },
-            sichuan:   { housePrice: 4500, decorPrice: 850, landTotalPrice: 42000, cropPrice: 1900, moveFee: 2800, transitFee: 1100, bonus: 48000 },
-            henan:     { housePrice: 3800, decorPrice: 700, landTotalPrice: 38000, cropPrice: 1800, moveFee: 2500, transitFee: 1000, bonus: 40000 },
-            beijing:   { housePrice: 25000, decorPrice: 3000, landTotalPrice: 120000, cropPrice: 5000, moveFee: 10000, transitFee: 5000, bonus: 300000 },
+        // ===== 行政区划数据 =====
+        const REGION_DATA = {
+            hubei: {
+                cities: {
+                    wuhan: { name: "武汉市", districts: ["江汉区", "武昌区", "洪山区", "汉阳区", "黄陂区", "新洲区", "江夏区", "蔡甸区"] },
+                    yichang: { name: "宜昌市", districts: ["西陵区", "伍家岗区", "夷陵区", "当阳市", "枝江市"] },
+                    xiangyang: { name: "襄阳市", districts: ["襄城区", "樊城区", "襄州区", "枣阳市", "宜城市"] },
+                    jingzhou: { name: "荆州市", districts: ["沙市区", "荆州区", "石首市", "洪湖市"] },
+                },
+                basePrice: 4200,
+                baseLandPrice: 45000,
+            },
+            jiangsu: {
+                cities: {
+                    nanjing: { name: "南京市", districts: ["玄武区", "秦淮区", "鼓楼区", "江宁区", "浦口区", "六合区"] },
+                    suzhou: { name: "苏州市", districts: ["姑苏区", "吴中区", "相城区", "昆山市", "张家港市"] },
+                    wuxi: { name: "无锡市", districts: ["梁溪区", "滨湖区", "江阴市", "宜兴市"] },
+                },
+                basePrice: 5800,
+                baseLandPrice: 52000,
+            },
+            zhejiang: {
+                cities: {
+                    hangzhou: { name: "杭州市", districts: ["上城区", "拱墅区", "西湖区", "余杭区", "萧山区", "临安区"] },
+                    ningbo: { name: "宁波市", districts: ["海曙区", "江北区", "鄞州区", "慈溪市", "余姚市"] },
+                    wenzhou: { name: "温州市", districts: ["鹿城区", "龙湾区", "瑞安市", "乐清市"] },
+                },
+                basePrice: 6500,
+                baseLandPrice: 65000,
+            },
+            shanghai: {
+                cities: {
+                    sh: { name: "上海市", districts: ["黄浦区", "徐汇区", "浦东新区", "闵行区", "嘉定区", "松江区", "崇明区"] },
+                },
+                basePrice: 18000,
+                baseLandPrice: 95000,
+            },
+            guangdong: {
+                cities: {
+                    guangzhou: { name: "广州市", districts: ["越秀区", "天河区", "白云区", "番禺区", "花都区", "从化区"] },
+                    shenzhen: { name: "深圳市", districts: ["福田区", "罗湖区", "南山区", "宝安区", "龙岗区"] },
+                    dongguan: { name: "东莞市", districts: ["莞城街道", "南城街道", "虎门镇", "长安镇"] },
+                },
+                basePrice: 7500,
+                baseLandPrice: 58000,
+            },
+            shandong: {
+                cities: {
+                    jinan: { name: "济南市", districts: ["历下区", "市中区", "槐荫区", "历城区", "章丘区"] },
+                    qingdao: { name: "青岛市", districts: ["市南区", "市北区", "李沧区", "城阳区", "胶州市"] },
+                },
+                basePrice: 4800,
+                baseLandPrice: 48000,
+            },
+            sichuan: {
+                cities: {
+                    chengdu: { name: "成都市", districts: ["锦江区", "青羊区", "金牛区", "武侯区", "成华区", "双流区", "郫都区"] },
+                    mianyang: { name: "绵阳市", districts: ["涪城区", "游仙区", "江油市"] },
+                },
+                basePrice: 4500,
+                baseLandPrice: 42000,
+            },
+            henan: {
+                cities: {
+                    zhengzhou: { name: "郑州市", districts: ["金水区", "二七区", "中原区", "管城回族区", "新郑市", "中牟县"] },
+                    luoyang: { name: "洛阳市", districts: ["西工区", "涧西区", "洛龙区", "偃师市"] },
+                },
+                basePrice: 3800,
+                baseLandPrice: 38000,
+            },
+            beijing: {
+                cities: {
+                    bj: { name: "北京市", districts: ["东城区", "西城区", "朝阳区", "海淀区", "丰台区", "通州区", "大兴区", "昌平区"] },
+                },
+                basePrice: 25000,
+                baseLandPrice: 120000,
+            },
         };
 
         // ===== 青苗类型参考单价 =====
         const CROP_PRESETS = {
-            grain: 2000,
-            vegetable: 4000,
-            fruit: 8000,
-            aquatic: 6000,
+            grain: 2000, vegetable: 4000, fruit: 8000, aquatic: 6000,
         };
 
         // ===== 工具函数 =====
@@ -511,32 +477,52 @@
             return '¥' + n.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        // ===== 初始化图表 =====
-        let chart = null;
-        function initChart() {
+        // ===== 图表初始化 =====
+        let pieChart = null, lineChart = null;
+        function initCharts() {
             if (typeof echarts === 'undefined') {
-                // CDN加载失败时隐藏图表容器，降级为纯列表展示
-                const el = $('chart');
-                if (el) el.style.display = 'none';
+                $('chart').style.display = 'none';
+                $('historyChart').style.display = 'none';
                 return;
             }
-            chart = echarts.init($('chart'));
-            window.addEventListener('resize', () => chart && chart.resize());
+            pieChart = echarts.init($('chart'));
+            lineChart = echarts.init($('historyChart'));
+            window.addEventListener('resize', () => {
+                pieChart && pieChart.resize();
+                lineChart && lineChart.resize();
+            });
         }
 
         // ===== 省份联动 =====
         function onProvinceChange() {
-            const key = $('province').value;
-            if (key === 'custom' || !PROVINCE_PRESETS[key]) return;
-            const p = PROVINCE_PRESETS[key];
-            $('housePrice').value = p.housePrice;
-            $('decorPrice').value = p.decorPrice;
-            $('landTotalPrice').value = p.landTotalPrice;
-            $('cropPrice').value = p.cropPrice;
-            $('moveFee').value = p.moveFee;
-            $('transitFee').value = p.transitFee;
-            $('bonus').value = p.bonus;
+            const prov = $('province').value;
+            const cities = REGION_DATA[prov].cities;
+            const citySelect = $('city');
+            citySelect.innerHTML = '';
+            Object.keys(cities).forEach(key => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = cities[key].name;
+                citySelect.appendChild(opt);
+            });
+            onCityChange();
+            updateHistoryChart();
             calcTotal();
+        }
+
+        // ===== 城市联动 =====
+        function onCityChange() {
+            const prov = $('province').value;
+            const city = $('city').value;
+            const districts = REGION_DATA[prov].cities[city].districts;
+            const distSelect = $('district');
+            distSelect.innerHTML = '';
+            districts.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                distSelect.appendChild(opt);
+            });
         }
 
         // ===== 土地性质联动 =====
@@ -550,56 +536,35 @@
         // ===== 青苗类型联动 =====
         function onCropTypeChange() {
             const key = $('cropType').value;
-            if (key === 'custom' || !CROP_PRESETS[key]) return;
-            $('cropPrice').value = CROP_PRESETS[key];
-            calcTotal();
-        }
-
-        // ===== 比例校验 =====
-        function checkRatios() {
-            const lr = val('landRatio');
-            const rr = val('resettleRatio');
-            const sum = lr + rr;
-            const warn = $('pctWarning');
-            if (Math.abs(sum - 100) > 0.1) {
-                warn.textContent = `提示：两项占比之和建议为100%，当前合计 ${sum}%`;
-                warn.classList.add('show');
-            } else {
-                warn.classList.remove('show');
+            if (CROP_PRESETS[key]) {
+                $('cropPrice').value = CROP_PRESETS[key];
             }
+            calcTotal();
         }
 
         // ===== 核心计算 =====
         function calcTotal() {
             const isCollective = $('landType').value === 'collective';
 
-            // 房屋相关
             const houseTotal = val('houseArea') * val('housePrice');
             const decorTotal = val('houseArea') * val('decorPrice');
             const attachTotal = val('attachPrice');
 
-            // 土地与安置（仅集体土地）
             let landCompTotal = 0, resettleTotal = 0, cropTotal = 0;
             if (isCollective) {
                 const landMu = val('landMu');
                 const landTotalPrice = val('landTotalPrice');
-                const landRatio = val('landRatio') / 100;
-                const resettleRatio = val('resettleRatio') / 100;
-                landCompTotal = landMu * landTotalPrice * landRatio;
-                resettleTotal = landMu * landTotalPrice * resettleRatio;
+                landCompTotal = landMu * landTotalPrice * val('landRatio') / 100;
+                resettleTotal = landMu * landTotalPrice * val('resettleRatio') / 100;
                 cropTotal = val('cropMu') * val('cropPrice');
-                checkRatios();
             }
 
-            // 搬迁与奖励
             const moveTotal = val('moveFee');
             const transitTotal = val('transitFee') * val('transitMonth');
             const bonusTotal = val('bonus');
 
-            // 合计
             const sum = houseTotal + decorTotal + attachTotal + landCompTotal + resettleTotal + cropTotal + moveTotal + transitTotal + bonusTotal;
 
-            // 回填DOM
             $('resHouse').textContent = formatMoney(houseTotal);
             $('resDecor').textContent = formatMoney(decorTotal);
             $('resAttach').textContent = formatMoney(attachTotal);
@@ -612,50 +577,82 @@
             $('resTotal').textContent = formatMoney(sum);
             $('resultBox').classList.add('show');
 
-            // 更新饼图
-            updateChart([
-                { name: '房屋主体', value: houseTotal, color: '#3b82f6' },
-                { name: '装修补偿', value: decorTotal, color: '#60a5fa' },
-                { name: '附属物', value: attachTotal, color: '#93c5fd' },
-                { name: '土地补偿', value: landCompTotal, color: '#f59e0b' },
-                { name: '安置补助', value: resettleTotal, color: '#fbbf24' },
-                { name: '青苗补偿', value: cropTotal, color: '#10b981' },
-                { name: '搬迁费', value: moveTotal, color: '#8b5cf6' },
-                { name: '过渡费', value: transitTotal, color: '#a78bfa' },
-                { name: '签约奖励', value: bonusTotal, color: '#ec4899' },
-            ]);
+            if (pieChart) {
+                pieChart.setOption({
+                    tooltip: { trigger: 'item', formatter: '{b}: {c}元 ({d}%)' },
+                    legend: { bottom: 0, itemWidth: 10, itemHeight: 10, textStyle: { fontSize: 11, color: '#64748b' } },
+                    series: [{
+                        type: 'pie', radius: ['40%', '65%'], center: ['50%', '42%'],
+                        avoidLabelOverlap: true, label: { show: false },
+                        itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 },
+                        data: [
+                            { name: '房屋主体', value: Math.round(houseTotal), itemStyle: { color: '#3b82f6' } },
+                            { name: '装修补偿', value: Math.round(decorTotal), itemStyle: { color: '#60a5fa' } },
+                            { name: '附属物', value: Math.round(attachTotal), itemStyle: { color: '#93c5fd' } },
+                            { name: '土地补偿', value: Math.round(landCompTotal), itemStyle: { color: '#f59e0b' } },
+                            { name: '安置补助', value: Math.round(resettleTotal), itemStyle: { color: '#fbbf24' } },
+                            { name: '青苗补偿', value: Math.round(cropTotal), itemStyle: { color: '#10b981' } },
+                            { name: '搬迁费', value: Math.round(moveTotal), itemStyle: { color: '#8b5cf6' } },
+                            { name: '过渡费', value: Math.round(transitTotal), itemStyle: { color: '#a78bfa' } },
+                            { name: '签约奖励', value: Math.round(bonusTotal), itemStyle: { color: '#ec4899' } },
+                        ].filter(d => d.value > 0)
+                    }]
+                });
+            }
         }
 
-        // ===== 饼图渲染 =====
-        function updateChart(data) {
-            if (!chart) return;
-            const valid = data.filter(d => d.value > 0);
-            if (!valid.length || !chart) return;
-            chart.setOption({
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{b}: {c}元 ({d}%)'
-                },
-                legend: {
-                    bottom: 0,
-                    itemWidth: 10,
-                    itemHeight: 10,
-                    textStyle: { fontSize: 11, color: '#64748b' }
-                },
-                series: [{
-                    type: 'pie',
-                    radius: ['40%', '65%'],
-                    center: ['50%', '42%'],
-                    avoidLabelOverlap: true,
-                    label: { show: false },
-                    itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 },
-                    data: valid.map(d => ({
-                        name: d.name,
-                        value: Math.round(d.value),
-                        itemStyle: { color: d.color }
-                    }))
-                }]
-            });
+        // ===== 历史对比图 =====
+        function updateHistoryChart() {
+            const prov = $('province').value;
+            const baseHouse = REGION_DATA[prov].basePrice;
+            const baseLand = REGION_DATA[prov].baseLandPrice;
+            const years = [];
+            const housePrices = [];
+            const landPrices = [];
+            const now = new Date().getFullYear();
+
+            for (let i = 9; i >= 0; i--) {
+                const year = now - i;
+                years.push(year + '年');
+                const factor = 1 + (9 - i) * 0.08;
+                housePrices.push(Math.round(baseHouse / factor));
+                landPrices.push(Math.round(baseLand / factor));
+            }
+
+            // 表格
+            const tbody = $('historyTableBody');
+            tbody.innerHTML = '';
+            for (let i = years.length - 1; i >= 0; i--) {
+                const tr = document.createElement('tr');
+                const prev = i > 0 ? housePrices[i-1] : housePrices[i];
+                const pct = i > 0 ? ((housePrices[i] - housePrices[i-1]) / housePrices[i-1] * 100).toFixed(1) : '—';
+                const trend = i > 0 ? (pct > 0 ? `<span class="up">↑${pct}%</span>` : `<span class="down">↓${Math.abs(pct)}%</span>`) : '—';
+                tr.innerHTML = `
+                    <td>${years[i]}</td>
+                    <td>${housePrices[i].toLocaleString()} 元/㎡</td>
+                    <td>${landPrices[i].toLocaleString()} 元/亩</td>
+                    <td>${trend}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+
+            // 折线图
+            if (lineChart) {
+                lineChart.setOption({
+                    tooltip: { trigger: 'axis' },
+                    legend: { data: ['房屋单价(元/㎡)', '片区地价(百元/亩)'], bottom: 0, textStyle: { fontSize: 11 } },
+                    grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                    xAxis: { type: 'category', data: years, axisLabel: { fontSize: 10 } },
+                    yAxis: [
+                        { type: 'value', name: '房价(元/㎡)', position: 'left', axisLabel: { fontSize: 10 } },
+                        { type: 'value', name: '地价(百元/亩)', position: 'right', axisLabel: { fontSize: 10 } }
+                    ],
+                    series: [
+                        { name: '房屋单价(元/㎡)', type: 'line', data: housePrices, smooth: true, itemStyle: { color: '#2563eb' }, areaStyle: { opacity: 0.1 } },
+                        { name: '片区地价(百元/亩)', type: 'line', yAxisIndex: 1, data: landPrices.map(v => Math.round(v/100)), smooth: true, itemStyle: { color: '#f59e0b' }, areaStyle: { opacity: 0.1 } },
+                    ]
+                });
+            }
         }
 
         // ===== 重置 =====
@@ -676,8 +673,10 @@
             $('province').value = 'hubei';
             $('landType').value = 'collective';
             $('cropType').value = 'grain';
-            onLandTypeChange();
+            $('town').value = '城关镇';
+            $('village').value = '幸福村';
             onProvinceChange();
+            onLandTypeChange();
             calcTotal();
         }
 
@@ -688,18 +687,24 @@
                 '========== 拆迁补偿精算报告 ==========',
                 `生成时间：${new Date().toLocaleString('zh-CN')}`,
                 '',
-                '【基础信息】',
+                '【被征收地址】',
                 `省份：${opt('province')}`,
+                `城市：${opt('city')}`,
+                `区/县：${$('district').value}`,
+                `镇/乡：${$('town').value}`,
+                `行政村：${$('village').value}`,
+                '',
+                '【房屋与土地】',
                 `土地性质：${opt('landType')}`,
-                `房屋建筑面积：${$('houseArea').value} ㎡`,
-                `房屋评估单价：${$('housePrice').value} 元/㎡`,
-                `装修评估单价：${$('decorPrice').value} 元/㎡`,
-                `附属物补偿：${$('attachPrice').value} 元`,
+                `建筑面积：${$('houseArea').value} ㎡`,
+                `房屋单价：${$('housePrice').value} 元/㎡`,
+                `装修单价：${$('decorPrice').value} 元/㎡`,
+                `附属物：${$('attachPrice').value} 元`,
                 '',
                 $('landType').value === 'collective' ? [
-                    '【土地与青苗补偿】',
+                    '【土地与青苗】',
                     `征地面积：${$('landMu').value} 亩`,
-                    `片区综合地价：${$('landTotalPrice').value} 元/亩`,
+                    `片区地价：${$('landTotalPrice').value} 元/亩`,
                     `土地补偿占比：${$('landRatio').value}%`,
                     `安置补助占比：${$('resettleRatio').value}%`,
                     `青苗类型：${opt('cropType')}`,
@@ -709,49 +714,46 @@
                 ].join('\n') : '',
                 '【搬迁与奖励】',
                 `搬迁费：${$('moveFee').value} 元`,
-                `临时安置费：${$('transitFee').value} 元/月 × ${$('transitMonth').value} 月`,
+                `过渡费：${$('transitFee').value} 元/月 × ${$('transitMonth').value} 月`,
                 `签约奖励：${$('bonus').value} 元`,
                 '',
                 '========== 补偿明细 ==========',
-                `房屋主体补偿：${$('resHouse').textContent}`,
+                `房屋主体：${$('resHouse').textContent}`,
                 `装修补偿：${$('resDecor').textContent}`,
-                `附属物补偿：${$('resAttach').textContent}`,
-                `土地补偿费：${$('resLandComp').textContent}`,
-                `安置补助费：${$('resResettle').textContent}`,
-                `青苗补偿费：${$('resCrop').textContent}`,
+                `附属物：${$('resAttach').textContent}`,
+                `土地补偿：${$('resLandComp').textContent}`,
+                `安置补助：${$('resResettle').textContent}`,
+                `青苗补偿：${$('resCrop').textContent}`,
                 `搬迁费：${$('resMove').textContent}`,
-                `过渡安置费：${$('resTransit').textContent}`,
+                `过渡费：${$('resTransit').textContent}`,
                 `签约奖励：${$('resBonus').textContent}`,
                 '',
-                `★ 预估总补偿金额：${$('resTotal').textContent}`,
+                `★ 预估总补偿：${$('resTotal').textContent}`,
                 '',
-                '⚠ 免责声明：本报告仅为演示测算，不具备法律效力，最终补偿以当地征收公告及评估报告为准。',
+                '⚠ 本报告仅为演示测算，不具备法律效力。',
             ].filter(Boolean).join('\n');
 
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `拆迁补偿测算报告_${Date.now()}.txt`;
+            a.download = `拆迁补偿测算报告_${$('village').value}_${Date.now()}.txt`;
             a.click();
             URL.revokeObjectURL(url);
         }
 
-        // ===== 事件绑定 =====
+        // ===== 初始化 =====
         document.addEventListener('DOMContentLoaded', () => {
-            initChart();
-            $('province').addEventListener('change', onProvinceChange);
-            $('landType').addEventListener('change', onLandTypeChange);
-            $('cropType').addEventListener('change', onCropTypeChange);
+            initCharts();
+            onProvinceChange();
+            onLandTypeChange();
 
-            // 所有输入框变化时实时计算
             document.querySelectorAll('input[type="number"]').forEach(inp => {
                 inp.addEventListener('input', calcTotal);
             });
-
-            // 初始状态
-            onLandTypeChange();
-            calcTotal();
+            document.querySelectorAll('select').forEach(sel => {
+                sel.addEventListener('change', calcTotal);
+            });
         });
     </script>
 </body>
